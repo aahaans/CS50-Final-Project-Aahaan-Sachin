@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<style type="text/css">
+		#typing_area
+		{
+			position: relative;
+			text-align: center;
+			top: 75px;
+			left: 325px;
+			padding: 2.5px 5px 2.5px 5px;
+			border-width: 1px;
+		}
+
+		#main_header
+		{
+			margin-top: 25px;
+			text-align: center;
+			font-size: 44px;
+			color: red;
+		}
+
+		#phrase
+		{
+			font-size: 28px;
+			text-align: center;
+			color: blue;
+			margin-top: 40px;
+		}
+
+		#text
+		{
+			font-size: 30px;
+			color: green;
+			text-align: center;
+			margin-top: 25px;
+		}
+
+		#timer
+		{
+			font-size: 40px;
+			text-align: center;
+			margin-top: 50px;
+		}
+
+		#keycount
+		{
+			border-width: 1px;
+			border-color: rgb("#3333ee");
+		}
+
+		#submit
+		{
+			text-align: center;
+			font-size: 50px;
+			position: relative;
+			bottom: -150px;
+			left: -175px;
+		}
+
+		#info
+		{
+			position: absolute;
+			top: 10px;
+			left: 100px;
+			font-size: 48px;
+		}
+
+		#info_table
+		{
+			position: absolute;
+			top: 100px;
+			left: 50px;
+			font-size: 25px;
+		}
+
+		#results_table
+		{
+			position: absolute;
+			top: 100px;
+			right: 50px;
+			font-size: 25px;
+		}
+		#results
+		{
+			position: absolute;
+			top: 10px;
+			right: 175px;
+			font-size: 48px;
+		}
+
+		table, th, td
+		{
+  			border: 1px solid black;
+		}
+
+		a
+		{
+			font-size: 50px;
+			position: relative;
+			bottom: -180px;
+			left: 675px;
+		}
+
+
+	</style>
+	
+</head>
+<body>
+	<div id="main_header">Typing Speed Test</div>
+	<div id="phrase">Accelerate your typing</div>
+	<div id="timer">{{timer}}</div>
+	<div id="keycount"></div>
+	<div id="text">{{text}}</div>
+	<div id="wordcount"></div>
+	<div id="wordcount"></div>
+	<div id="info">Information</div>
+	<table id="info_table"> 
+		<thead>
+			<th>Letter Count</th>
+			<th>Word Count</th>
+			<th>Deadline</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{lc}}</td>
+				<td>{{wc}}</td>
+				<td>{{deadline}}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div id="results">Results</div>
+	<table id="results_table"> 
+		<thead>
+			<th>Time Taken</th>
+			<th>Accuracy</th>
+			<th>Words per minute</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td id="tt">Seconds</td>
+				<td id="accuracy">%</td>
+				<td id="wpm">WPM</td>
+			</tr>
+		</tbody>
+	</table>
+	<div id="letter_count"></div>
+	<div id="word_count"></div>
+
+	
+	<form id="frm">
+	<textarea rows="10" cols="100" type="text" name="text" id="typing_area"></textarea>
+	</form>
+	<a href="/">Restart</a>
+	<div id="t"></div>
+	<script type="text/javascript">
+
+
+timer = 5;
+
+function update_count_down() {
+	document.getElementById("timer").innerHTML = timer;
+	timer--;
+	if (timer == 0)
+		{
+			document.getElementById("timer").innerHTML = "Go!";
+			clearInterval(timer_interval_id);
+		}
+}
+
+timer_interval_id = setInterval(update_count_down, 1000);
+
+
+function update_time() {
+	document.getElementById("timer").innerHTML = timer;
+	timer += 100;
+	if (timer > {{deadline}})		// in ms
+		{
+			document.getElementById("timer").innerHTML = "Time Out!";
+			clearInterval(timer_interval_id);
+		}
+}
+
+keycount = 0;
+wordcount = 0;
+
+// object.addEventListener("keydown", myScript);
+
+typing_text = [];
+typing_text = document.getElementById("text").innerHTML;
+
+
+
+document.getElementById("typing_area").onkeydown = function () {
+		document.getElementById("timer").innerHTML = "Starting the timer now ..";
+		clearInterval(timer_interval_id);
+		timer = 0;
+		timer_interval_id = setInterval(update_time, 100);
+		document.getElementById("typing_area").onkeydown = function (evt) { 
+			keycount++;
+			document.getElementById("keycount").innerHTML = keycount;
+			if (evt.keyCode == "32") wordcount++;
+			document.getElementById("wordcount").innerHTML = wordcount;
+			if (evt.keyCode == "190")
+			{
+				clearInterval(timer_interval_id);
+				document.getElementById("typing_area").disabled = true;
+				document.getElementById("typing_area").value += ".";``
+				typed = document.getElementById("typing_area").value;
+				document.getElementById("tt").innerHTML = timer;
+				typed_text = [];
+				typed_text = typed;
+				word_count = 1;
+				var a = 0;
+				var c = 0;
+
+
+				for (var i = 0; i < typed_text.length; i++)
+				{
+					if (typed_text[i] == " ")
+					{
+						word_count++;
+					}
+					if (i > typed_text.length)
+					{
+						break;
+					}
+					if (typing_text[i] == typed_text[i])
+					{
+						a++
+					}
+					c++
+					console.log("a = " + a + " | c = " + c);
+				}
+
+				document.getElementById("accuracy").innerHTML = Math.round((a / c) * 100);
+
+				document.getElementById("wpm").innerHTML =  Math.ceil(word_count * 1000 * 60 / timer);  //Math.ceil(word_count / (timer / 1000)) * 60 * 1.0;
+			}
+		};
+		// Search for delete function / destroy function to remove the above association
+}
+
+
+
+
+
+
+	</script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>
